@@ -1,0 +1,40 @@
+name: Build Pre-compiled PS3DEV Toolchain
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build_ps3dev:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Minimize disk space and update system
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf automake bison flex g++ libelf-dev make texinfo libncurses5-dev patch pdf2svg libtool libtool-bin wget bzip2 gzip libgmp3-dev libmpfr-dev libmpc-dev zlib1g-dev git pkg-config
+
+    - name: Clone ps3toolchain
+      run: |
+        git clone https://github.com/ps3dev/ps3toolchain.git
+        cd ps3toolchain
+
+    - name: Build Toolchain (This will take a while in the cloud)
+      run: |
+        export PS3DEV=/opt/ps3dev
+        export PATH=$PATH:$PS3DEV/bin
+        export PATH=$PATH:$PS3DEV/ppu/bin
+        export PATH=$PATH:$PS3DEV/spu/bin
+        cd ps3toolchain
+        # تشغيل سكريبت البناء الذاتي بالكامل في السحاب
+        sudo ./toolchain.sh
+
+    - name: Compress Built Toolchain
+      run: |
+        # ضغط مجلد البيئة المبنية بالكامل لتسهيل تحميلها
+        tar -czvf ps3dev-ubuntu-compiled.tar.gz /opt/ps3dev
+
+    - name: Upload Compiled PS3DEV Package
+      uses: actions/upload-artifact@v4
+      with:
+        name: PS3DEV-Precompiled-SDK
+        path: ps3dev-ubuntu-compiled.tar.gz
+        
