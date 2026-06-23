@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Clone Code
         uses: actions/checkout@v4
@@ -16,7 +16,7 @@ jobs:
       - name: Install Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y autoconf automake bison flex g++ libelf-dev make texinfo libncurses5-dev patch pdf2svg libtool libtool-bin wget bzip2 gzip libgmp3-dev libmpfr-dev libmpc-dev zlib1g-dev git pkg-config
+          sudo apt-get install -y autoconf automake bison flex g++ libelf-dev make texinfo libncurses5-dev patch pdf2svg libtool libtool-bin wget bzip2 gzip libgmp3-dev libmpfr-dev libmpc-dev zlib1g-dev git pkg-config Python3
 
       - name: Build SDK
         run: |
